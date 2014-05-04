@@ -1,0 +1,23 @@
+{
+    "name": "broccoli-bundle-assets",
+    "version": "0.1.0",
+    "description": "Create bundles of JS and CSS assets",
+    "license": "MIT",
+    "author": "Stéphan Kochen <stephan@kochen.nl>",
+    "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "http://github.com/stephank/broccoli-bundle-assets.git"
+    },
+    "keywords": [
+        "broccoli-plugin"
+    ],
+    "devDependencies": {
+        "mkdirp": "0.4",
+        "cheerio": "0.15",
+        "walk-sync": "0.1",
+        "promise-map-series": "0.2",
+        "broccoli-writer": "0.1",
+        "broccoli-kitchen-sink-helpers": "0.2"
+    }
+}
