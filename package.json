@@ -12,7 +12,7 @@
     "keywords": [
         "broccoli-plugin"
     ],
-    "devDependencies": {
+    "dependencies": {
         "mkdirp": "0.4",
         "cheerio": "0.15",
         "walk-sync": "0.1",
