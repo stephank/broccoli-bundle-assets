@@ -73,7 +73,7 @@ BundleAssets.prototype.processHtml = function(i, o, iRoot) {
     // Walk elements matching the selector, and look for the files in the given
     // attribute. The result is a list of tags and their files' contents.
     function collectFiles(sel, attr, cb) {
-        var contents = [];
+        var files = [];
         var tags = $(sel).filter(function() {
             var s = $(this).attr(attr);
 
@@ -89,19 +89,23 @@ BundleAssets.prototype.processHtml = function(i, o, iRoot) {
             if (!fs.existsSync(f))
                 return false;
 
-            contents.push(fs.readFileSync(f, 'utf-8'));
+            files.push({
+                path: f,
+                data: fs.readFileSync(f, 'utf-8')
+            });
             return true;
         });
-        cb(tags, contents);
+        cb(tags, files);
     }
 
     // Bundle all js content and create a new script tag.
-    collectFiles('script', 'src', function(tags, contents) {
+    collectFiles('script', 'src', function(tags, files) {
         if (tags.length === 0) return;
         tags.remove();
 
         var file = name + '.js';
-        fs.writeFileSync(path.join(oBase, file), contents.join('\n'));
+        var data = files.map(function(f) { return f.data; }).join('\n');
+        fs.writeFileSync(path.join(oBase, file), data);
 
         var tag = $('<script/>')
             .attr('src', file);
@@ -109,12 +113,22 @@ BundleAssets.prototype.processHtml = function(i, o, iRoot) {
     });
 
     // Bundle all css content and create a new link tag.
-    collectFiles('link[rel="stylesheet"]', 'href', function(tags, contents) {
+    collectFiles('link[rel="stylesheet"]', 'href', function(tags, files) {
         if (tags.length === 0) return;
         tags.remove();
 
         var file = name + '.css';
-        fs.writeFileSync(path.join(oBase, file), contents.join('\n'));
+        var data = files.map(function(f) {
+            // Rewrite relative URLs.
+            var dir = path.dirname(f.path);
+            return f.data.replace(/url\(\s*['"]?(.+?)['"]?\s*\)/g, function(match, ref) {
+                if (ref[0] === '/' || /https?:/.test(ref)) return match;
+                ref = path.resolve(dir, ref);
+                ref = path.relative(iBase, ref);
+                return 'url(' + JSON.stringify(ref) + ')';
+            });
+        }).join('\n');
+        fs.writeFileSync(path.join(oBase, file), data);
 
         var tag = $('<link/>')
             .attr('rel', 'stylesheet')
