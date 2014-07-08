@@ -1,6 +1,6 @@
 {
     "name": "broccoli-bundle-assets",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Create bundles of JS and CSS assets",
     "license": "MIT",
     "author": "Stéphan Kochen <stephan@kochen.nl>",
