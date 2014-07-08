@@ -13,8 +13,8 @@
         "broccoli-plugin"
     ],
     "dependencies": {
-        "mkdirp": "0.4",
-        "cheerio": "0.15",
+        "mkdirp": "0.5",
+        "cheerio": "0.17",
         "walk-sync": "0.1",
         "promise-map-series": "0.2",
         "broccoli-writer": "0.1",
